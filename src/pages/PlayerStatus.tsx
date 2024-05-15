@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Player } from "../types/player";
+import GoHome from "../components/GoHome";
 
 const PlayerStatus = () => {
   const dummy: Player[] = [{ id: 1, name: "player1", hp: 100, mp: 100, money: 100 }];
@@ -10,9 +11,8 @@ const PlayerStatus = () => {
     const playerId = localStorage.getItem("playerId");
     try {
       //自分のapiサーバーにリクエストを送る
-      const res = await axios.get(`http://localhost:3001/players/${playerId}`);
+      const res = await axios.get(`http://localhost:3000/users/${playerId}`);
       const data = await res.data;
-      console.log(data);
       return data;
       //TODO 取得したデータをstateに保存
     } catch (e) {
@@ -26,7 +26,8 @@ const PlayerStatus = () => {
     if (result == null) {
       setPlayers(dummy);
     } else {
-      setPlayers(result);
+      const playerData:Player[] = [result];
+      setPlayers(playerData);
     }
   };
 
@@ -57,6 +58,7 @@ const PlayerStatus = () => {
           ))}
         </tbody>
       </table>
+      <GoHome/>
     </div>
   );
 };
