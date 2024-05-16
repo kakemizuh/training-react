@@ -6,6 +6,7 @@ import ShowStatus from "../components/ShowStatus";
 import { useEffect } from "react";
 
 const Gacha = () => {
+  const URL = process.env.URL;
   const [players, setPlayers] = useState<Player[]>([]);
   const [gachaResults, setGachaResults] = useState<any[]>([]);
   const [gachaCount, setGachaCount] = useState<number>(1);
@@ -25,7 +26,7 @@ const Gacha = () => {
     }
     try{
       //自分のapiサーバーにリクエストを送る
-      const res = await axios.post(`http://localhost:3000/users/${playerId}/useGacha`, req);
+      const res = await axios.post(`${URL}/users/${playerId}/useGacha`, req);
       const data = res.data;
       return data;
     }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Player } from "../types/player";
 
 const Login = () => {
+  const URL = process.env.URL;
   const navigate = useNavigate();
   const [playerId, setPlayerId] = useState("");
   const [loginErrorFlag, setLoginErrorFlag] = useState(false);
@@ -17,7 +18,7 @@ const Login = () => {
 
   const login = async () => {
     //idでプレイヤーのステータスを取得する
-    const res = await axios.get(`http://localhost:3000/users/${playerId}`);
+    const res = await axios.get(`${URL}/users/${playerId}`);
     const data = await res.data;
     if(data){
       //stringに変換

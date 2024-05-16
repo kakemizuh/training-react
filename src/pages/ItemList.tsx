@@ -7,6 +7,7 @@ import ShowStatus from "../components/ShowStatus";
 import { error } from "console";
 
 const ItemList = () => {
+  const URL = process.env.URL;
   const [players, setPlayers] = useState<Player[]>([]);
   const [playerItems, setPlayerItems] = useState<PlayerItem[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>();
@@ -25,7 +26,7 @@ const ItemList = () => {
     };
     try{
       //useItemAPI
-      const res = await axios.post(`http://localhost:3000/users/${playerId}/useItem`, req);
+      const res = await axios.post(`${URL}/users/${playerId}/useItem`, req);
       const data = res.data;
       return data;
     }
