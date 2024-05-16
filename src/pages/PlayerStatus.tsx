@@ -4,6 +4,7 @@ import { Player } from "../types/player";
 import GoHome from "../components/GoHome";
 
 const PlayerStatus = () => {
+  const URL = process.env.URL;
   const dummy: Player[] = [{ id: 1, name: "player1", hp: 100, mp: 100, money: 100 }];
   const [players, setPlayers] = useState<Player[]>([]);
 
@@ -11,7 +12,7 @@ const PlayerStatus = () => {
     const playerId = localStorage.getItem("playerId");
     try {
       //自分のapiサーバーにリクエストを送る
-      const res = await axios.get(`http://localhost:3000/users/${playerId}`);
+      const res = await axios.get(`${URL}/users/${playerId}`);
       const data = await res.data;
       return data;
       //TODO 取得したデータをstateに保存
@@ -46,7 +47,6 @@ const PlayerStatus = () => {
           </tr>
         </thead>
         <tbody>
-          {/* TODO 取得したデータ表示 */}
           {players.map((d) => (
             <tr key={d.id}>
               <td>{d.id}</td>

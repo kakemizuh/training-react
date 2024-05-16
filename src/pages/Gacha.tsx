@@ -16,35 +16,46 @@ const Gacha = () => {
   },[]);
 
   //ガチャを引く
-  const gacha = async (
+  const fetchData = async (
     count: number
   ) => {
     const playerId = localStorage.getItem("playerId");
     const req = {
         count: count
     }
+    try{
     //自分のapiサーバーにリクエストを送る
-    axios.post(`http://localhost:3000/users/${playerId}/useGacha`, req)
-      .then(response => {
-        //エラーメッセージを初期化
-        setErrorMessage("");
-        //ガチャの結果を格納
-        const playerItemData: any[] = response.data.results;
-        setGachaResults(playerItemData);
-
-        //ローカルストレージのプレイヤーステータスを更新
-        let playerDataString = localStorage.getItem("playerStatus");
-        let playerData: Player[] = JSON.parse(playerDataString!);
-        playerData[0].money = response.data.result.player.money;
-        let stringData = JSON.stringify(playerData);
-        localStorage.setItem("playerStatus", stringData);
-        setPlayers(playerData);
-      })
-      .catch(error => {
-        //エラーメッセージをセット
-        setErrorMessage(error.response.data.message);
-      });
+    const res = await axios.post(`http://localhost:3000/users/${playerId}/useGacha`, req);
+    const data = res.data;
+    return data;
+    }
+    catch(error: any){
+      //エラーメッセージをセット
+      setErrorMessage(error.response.data.message);
+      return null;
+    };
   };
+
+  const gacha = async(
+    count: number
+  ) => {
+    const result = await fetchData(count);
+    if(result){
+      //エラーメッセージを初期化
+      setErrorMessage("");
+      //ガチャの結果を格納
+      const playerItemData: any[] = result.results;
+      setGachaResults(playerItemData);
+
+      //ローカルストレージのプレイヤーステータスを更新
+      let playerDataString = localStorage.getItem("playerStatus");
+      let playerData: Player[] = JSON.parse(playerDataString!);
+      playerData[0].money = result.player.money;
+      let stringData = JSON.stringify(playerData);
+      localStorage.setItem("playerStatus", stringData);
+      setPlayers(playerData);
+    }
+  }
 
   //プレイヤーステータスをローカルストレージから取得
   const playerDataUpdate = () => {
@@ -78,7 +89,6 @@ const Gacha = () => {
           </tr>
         </thead>
         <tbody>
-          {/* TODO 取得したデータ表示 */}
           {gachaResults.map((d) => (
             <tr key={d.itemId}>
               <td>{d.itemId}</td>

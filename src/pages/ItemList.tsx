@@ -18,23 +18,23 @@ const ItemList = () => {
   const healStatus = async (
     id: number
   ) => {
-  const playerId = localStorage.getItem("playerId");
-  const req = {
+    const playerId = localStorage.getItem("playerId");
+    const req = {
     itemId: id,
     count: 1
-  };
-  //useItemAPI
-  axios.post(`http://localhost:3000/users/${playerId}/useItem`, req)
-    .then(response => {
+    };
+    try{
+      //useItemAPI
+      const res = await axios.post(`http://localhost:3000/users/${playerId}/useItem`, req);
+      const data = res.data;
+
       //エラーメッセージを初期化
       setErrorMessage("");
-      const data = response.data;
 
       //所持数の更新
       let playerItemsNew = playerItems.slice(0,playerItems.length);
       playerItemsNew.find((playerItemNew) => playerItemNew.itemId == data.itemId)!.itemCount = data.count;
       setPlayerItems(playerItemsNew);
-      console.log(playerItems);
 
       //プレイヤーステータスの更新
       let playerDataString = localStorage.getItem("playerStatus");
@@ -46,12 +46,12 @@ const ItemList = () => {
       //プレイヤーステータスをローカルストレージに保存
       let stringData = JSON.stringify(playerData);
       localStorage.setItem("playerStatus", stringData);
-    })
-    .catch(error => {
+    }
+    catch(error: any){
       //エラーメッセージをセット
       setErrorMessage(error.response.data.message);
-    })
-  };
+    }
+  }
 
   //プレイヤーステータスをローカルストレージから取得
   const playerDataUpdate = () => {
@@ -89,7 +89,6 @@ const ItemList = () => {
           </tr>
         </thead>
         <tbody>
-          {/* TODO 取得したデータ表示 */}
           {playerItems.map((d) => (
             <tr key={d.item.id}>
               <td>{d.item.id}</td>

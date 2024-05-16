@@ -17,7 +17,6 @@ const ShowStatus = (props: Props) => {
           </tr>
         </thead>
         <tbody>
-          {/* TODO 取得したデータ表示 */}
           {props.playerStatus.map((d) => (
             <tr key={d.id}>
               <td>{d.id}</td>
