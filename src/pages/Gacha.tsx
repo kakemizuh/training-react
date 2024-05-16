@@ -24,10 +24,10 @@ const Gacha = () => {
         count: count
     }
     try{
-    //自分のapiサーバーにリクエストを送る
-    const res = await axios.post(`http://localhost:3000/users/${playerId}/useGacha`, req);
-    const data = res.data;
-    return data;
+      //自分のapiサーバーにリクエストを送る
+      const res = await axios.post(`http://localhost:3000/users/${playerId}/useGacha`, req);
+      const data = res.data;
+      return data;
     }
     catch(error: any){
       //エラーメッセージをセット

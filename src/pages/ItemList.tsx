@@ -15,7 +15,7 @@ const ItemList = () => {
     playerDataUpdate();
   },[]);
 
-  const healStatus = async (
+  const fetchData = async (
     id: number
   ) => {
     const playerId = localStorage.getItem("playerId");
@@ -27,29 +27,38 @@ const ItemList = () => {
       //useItemAPI
       const res = await axios.post(`http://localhost:3000/users/${playerId}/useItem`, req);
       const data = res.data;
+      return data;
+    }
+    catch(error: any){
+      //エラーメッセージをセット
+      setErrorMessage(error.response.data.message);
+      return null;
+    }
+  }
 
+  const healStatus = async(
+    id: number
+  ) => {
+    const result = await fetchData(id);
+    if(result){
       //エラーメッセージを初期化
       setErrorMessage("");
 
       //所持数の更新
       let playerItemsNew = playerItems.slice(0,playerItems.length);
-      playerItemsNew.find((playerItemNew) => playerItemNew.itemId == data.itemId)!.itemCount = data.count;
+      playerItemsNew.find((playerItemNew) => playerItemNew.itemId == result.itemId)!.itemCount = result.count;
       setPlayerItems(playerItemsNew);
 
       //プレイヤーステータスの更新
       let playerDataString = localStorage.getItem("playerStatus");
       let playerData: Player[] = JSON.parse(playerDataString!);
-      playerData[0].hp = data.player.hp;
-      playerData[0].mp = data.player.mp;
+      playerData[0].hp = result.player.hp;
+      playerData[0].mp = result.player.mp;
       setPlayers(playerData);
 
       //プレイヤーステータスをローカルストレージに保存
       let stringData = JSON.stringify(playerData);
       localStorage.setItem("playerStatus", stringData);
-    }
-    catch(error: any){
-      //エラーメッセージをセット
-      setErrorMessage(error.response.data.message);
     }
   }
 
